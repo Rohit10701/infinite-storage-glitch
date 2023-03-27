@@ -17,25 +17,26 @@ def binary_to_image(binary_str):
     img_width = 1920
     img_height = 1080
     size = img_width * img_height
-    print(len(binary_str))
-    print(size)
+
     num_images = (len(binary_str) // (size)) + 1
-    curIndex = 0
     for i in range(num_images):
-        image = Image.new("RGB", (img_width, img_height), (255, 255, 255))
+        image = Image.new("RGB", (img_width, img_height), (0, 255, 0))
+        index=0
         for y in range(img_height):
             for x in range(img_width):
-                index = curIndex+y*img_width+x
                 if index < len(binary_str):
                     if binary_str[index] == "1":
                         image.putpixel((x, y), (0, 0, 0))
-                    elif binary_str[index] == "0":
-                        image.putpixel((x, y), (255, 255, 255))
+
                     else:
-                        image.putpixel((x, y), (0, 255, 0))
-        curIndex=index
-        print(i)
-        # image.save(f"binary_image_{i}.png")
+                        image.putpixel((x, y), (255, 255, 255))
+                else:
+                    break
+                index+=1
+            index+=1
+        print(len())
+        binary_str=binary_str[index:]
+        image.save(f"binary_image_{i}.png")
 
 
 def image_to_binary(image_path):
@@ -51,8 +52,6 @@ def image_to_binary(image_path):
                 binary_str += "1"
             elif (r, g, b) == (255, 255, 255):
                 binary_str += "0"
-            else:
-                continue
 
     return binary_str
 
@@ -60,27 +59,28 @@ file_path="test_paper.pdf"
 
 fileName = file_path.split(".")
 binary_string = file_to_binary_string(file_path)
-print(binary_string)
 
+#saving original binary
 with open('binary.txt', 'w') as f:
     f.write(binary_string)
-binary_to_image(binary_string)
 
 with open('binary.txt') as f:
-    binary_string = f.read()
+    new_binary = f.read()
+binary_to_image(new_binary)
 
 
+binary_strings = []
+for i in range(12):
+    image_path = f"binary_image_{i}.png"
+    binary_strings.append(image_to_binary(image_path))
+original_binary_str = "".join(binary_strings)
 
+if binary_strings==original_binary_str:
+    print("True")
 
-# binary_strings = []
-# for i in range(12):
-#     image_path = f"binary_image_{i}.png"
-#     binary_strings.append(image_to_binary(image_path))
-# original_binary_str = "".join(binary_strings)
+with open('retrived-binary.txt', 'w') as f:
+    f.write(original_binary_str)
 #
-# print(original_binary_str)
-
-#
-# with open('binary.txt') as f:
-#     binary_string = f.read()
-# binary_string_to_file(binary_string, 'try1.pdf')
+with open('retrived-binary.txt') as f:
+    retrived_string = f.read()
+binary_string_to_file(binary_string, 'try1.pdf')
