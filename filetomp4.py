@@ -1,5 +1,6 @@
 from PIL import Image
-
+import cv2
+import os
 def file_to_binary_string(file_path):
     with open(file_path, 'rb') as file:
         binary_code = file.read()
@@ -34,9 +35,8 @@ def binary_to_image(binary_str):
                     break
                 index+=1
             index+=1
-        print(len())
         binary_str=binary_str[index:]
-        image.save(f"binary_image_{i}.png")
+        image.save(f"images/binary_image_{i}.png")
 
 
 def image_to_binary(image_path):
@@ -55,6 +55,12 @@ def image_to_binary(image_path):
 
     return binary_str
 
+def remove_img(path):
+    try:
+        os.remove(path)
+    except NameError:
+        print("No image found")
+
 file_path="test_paper.pdf"
 
 fileName = file_path.split(".")
@@ -69,11 +75,36 @@ with open('binary.txt') as f:
 binary_to_image(new_binary)
 
 
+#making video
+image_folder = 'images'
+video_name = 'video.avi'
+
+images = [img for img in os.listdir(image_folder) if img.endswith(".png")]
+frame = cv2.imread(os.path.join(image_folder, images[0]))
+height, width, layers = frame.shape
+
+video = cv2.VideoWriter(video_name, 0, 60, (width,height))
+
+for image in images:
+    video.write(cv2.imread(os.path.join(image_folder, image)))
+
+cv2.destroyAllWindows()
+video.release()
+
+
 binary_strings = []
-for i in range(12):
-    image_path = f"binary_image_{i}.png"
+#counting number of files in directory
+directory="images"
+onlyfiles = next(os.walk(directory))[2] #directory is your directory path as string
+print(len(onlyfiles))
+number_of_images = len(onlyfiles)-1
+for i in range(number_of_images):
+    image_path = f"images/binary_image_{i}.png"
     binary_strings.append(image_to_binary(image_path))
+    remove_img(f"images/binary_image_{i}.png")
 original_binary_str = "".join(binary_strings)
+remove_img(f"images/binary_image_{number_of_images}.png") # deleteing last image
+
 
 if binary_strings==original_binary_str:
     print("True")
