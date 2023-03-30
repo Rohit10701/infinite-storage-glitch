@@ -17,16 +17,15 @@ def binary_string_to_file(binary_string, file_path):
 
 #binary_str = 1000 1010 1111 0000 1111
 def binary_to_image(binary_str):
-    img_width = 1920
-    img_height = 1080
-    size = img_width * img_height
-
+    img_width = 5
+    img_height = 5
+    size = (img_width-1)* (img_height-1)
+    index = 0
     num_images = (len(binary_str) // (size)) + 1
     for i in range(num_images):
         image = Image.new("RGB", (img_width, img_height), (255, 0, 0))
-        index=0
-        for y in range(img_height): #0
-            for x in range(img_width): #0
+        for y in range(img_height-1): #0
+            for x in range(img_width-1): #0
                 if index < len(binary_str):
                     if binary_str[index] == "1":
                         image.putpixel((x, y), (0, 0, 0))
@@ -36,7 +35,6 @@ def binary_to_image(binary_str):
                 else:
                     image.putpixel((x, y), (255, 0, 0))
                 index+=1
-        binary_str=binary_str[index:]
         image.save(f"images/binary_image_{i}.png")
 
 
@@ -66,7 +64,7 @@ def remove_img(path):
 
 
 #taking the input
-file_path="test/pika.zip"
+file_path="test/pika.txt"
 
 
 #spliting thr name
@@ -90,22 +88,27 @@ binary_to_image(new_binary)
 image_folder = 'images'
 video_name = fileName[0]+'.'+fileName[1]+'.avi'
 
-images = [img for img in os.listdir(image_folder) if img.endswith(".png")]
-print(len(images))
-frame = cv2.imread(os.path.join(image_folder, images[0]))
-height, width, layers = frame.shape
+import glob
 
-video = cv2.VideoWriter(video_name, 0, 0.2, (width,height))
+frameSize = (5,5)
 
-i=0
-for image in images:
-    print(i)
-    video.write(cv2.imread(os.path.join(image_folder, image)))
-    i+=1
-cv2.destroyAllWindows()
-video.release()
+out = cv2.VideoWriter(video_name,cv2.VideoWriter_fourcc(*'DIVX'), 40, frameSize)
+
+for filename in glob.glob('images/*.png'):
+    img = cv2.imread(filename)
+    out.write(img)
+
+out.release()
 
 
+#deleting images
+# binary_strings = []
+# directory="images"
+# onlyfiles = next(os.walk(directory))[2]
+#
+# number_of_images = len(onlyfiles)
+# for i in range(len(onlyfiles)):
+#     remove_img(f"images/binary_image_{i}.png")
 
 
 

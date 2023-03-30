@@ -1,13 +1,14 @@
 from PIL import Image
 import cv2
 import os
-
+from datetime import timedelta
+import numpy as np
 def image_to_binary(image_path):
     img = Image.open(image_path)
     pixels = img.load()
     width, height = img.size
     binary_str = ""
-
+    print(img.size)
     for y in range(height):
         for x in range(width):
             r, g, b = pixels[x, y]
@@ -31,9 +32,13 @@ def remove_img(path):
     except NameError:
         print("No image found")
 
-filePath = "test/pika.zip.avi"
+filePath = "test/pika.txt.avi"
 fileName = filePath.split('.')
+
+
+
 cam = cv2.VideoCapture(filePath)
+
 
 try:
     if not os.path.exists('data'):
@@ -42,18 +47,19 @@ except OSError:
     print('Error: Creating directory of data')
 currentframe = 0
 while (True):
-    ret, frame = cam.read()
+    cam.set(cv2.CAP_PROP_POS_MSEC, 40 * 1000)
+    ret, img = cam.read()
+    print(ret)
     if ret:
         name = './data/binary_image_' + str(currentframe) + '.png'
         print('Creating...' + name)
-        cv2.imwrite(name, frame)
+        cv2.imwrite(name, img)
         currentframe += 1
     else:
         break
 print(currentframe)
 cam.release()
 cv2.destroyAllWindows()
-
 
 binary_strings = []
 #counting number of files in directory
@@ -62,13 +68,10 @@ onlyfiles = next(os.walk(directory))[2] #directory is your directory path as str
 
 number_of_images = len(onlyfiles)
 for i in range(len(onlyfiles)):
-
-    image_path = f"images/binary_image_{i}.png"
+    image_path = f"data/binary_image_{i}.png"
     binary_strings.append(image_to_binary(image_path))
-    # remove_img(f"images/binary_image_{i}.png")
+    #remove_img(f"data/binary_image_{i}.png")
 original_binary_str = "".join(binary_strings)
-# remove_img(f"images/binary_image_{number_of_images}.png") # deleteing last image
-
 
 with open('binary/retrived-binary.txt', 'w') as f:
     f.write(original_binary_str)
