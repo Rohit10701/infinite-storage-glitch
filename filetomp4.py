@@ -53,7 +53,7 @@ def binary_to_image(binary_str):
             image_data = binary_str[start:end]
             img_width = int(len(image_data) ** 0.5)
             img_height = int(len(image_data) / img_width) + 1
-            image = Image.new("RGB", (img_width, img_height), (0, 255, 0))
+            image = Image.new("RGB", (img_width, img_height), (255, 0, 0))
             index = 0
             for y in range(img_height):
                 for x in range(img_width):
@@ -70,7 +70,7 @@ def binary_to_image(binary_str):
         # create a single image
         img_width = int(num_pixels ** 0.5)
         img_height = int(num_pixels / img_width) + 1
-        image = Image.new("RGB", (img_width, img_height), (0, 255, 0))
+        image = Image.new("RGB", (img_width, img_height), (255, 0, 0))
         index = 0
         for y in range(img_height):
             for x in range(img_width):
@@ -98,7 +98,6 @@ def image_to_binary(image_path):
                 binary_str += "1"
             elif (r, g, b) == (255, 255, 255):
                 binary_str += "0"
-
     return binary_str
 
 def remove_img(path):
@@ -122,19 +121,23 @@ binary_to_image(new_binary)
 
 #making video
 image_folder = 'images'
-video_name = fileName[0]+'.'+fileName[1]+'.avi'
+video_name = fileName[0]+'.'+fileName[1]+'.'+str(len(binary_string))+'.avi'
 
 images = [img for img in os.listdir(image_folder) if img.endswith(".png")]
+print(len(images))
 frame = cv2.imread(os.path.join(image_folder, images[0]))
 height, width, layers = frame.shape
 
-video = cv2.VideoWriter(video_name, 0, 1, (width,height))
+video = cv2.VideoWriter(video_name, 0, 0.2, (width,height))
 
+i=0
 for image in images:
+    print(i)
     video.write(cv2.imread(os.path.join(image_folder, image)))
-
+    i+=1
 cv2.destroyAllWindows()
 video.release()
+
 
 # binary_strings = []
 # #counting number of files in directory
