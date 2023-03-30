@@ -13,8 +13,10 @@ def image_to_binary(image_path):
             r, g, b = pixels[x, y]
             if (r, g, b) == (0, 0, 0):
                 binary_str += "1"
-            elif (r, g, b) == (255,255,255):
+            elif (r, g, b) == (255, 255, 255):
                 binary_str += "0"
+            else:
+                continue
     return binary_str
 
 def binary_string_to_file(binary_string, file_path):
@@ -29,7 +31,7 @@ def remove_img(path):
     except NameError:
         print("No image found")
 
-filePath = "test_paper.pdf.25124528.avi"
+filePath = "test/pika.zip.avi"
 fileName = filePath.split('.')
 cam = cv2.VideoCapture(filePath)
 
@@ -59,25 +61,19 @@ directory="data"
 onlyfiles = next(os.walk(directory))[2] #directory is your directory path as string
 
 number_of_images = len(onlyfiles)
-print(number_of_images)
 for i in range(len(onlyfiles)):
 
     image_path = f"images/binary_image_{i}.png"
     binary_strings.append(image_to_binary(image_path))
-
-
-    # remove_img(f"data/binary_image_{i}.png")
+    # remove_img(f"images/binary_image_{i}.png")
 original_binary_str = "".join(binary_strings)
-print(fileName[2])
-original_binary_str = original_binary_str[:int(fileName[2])]
-
-#remove_img(f"images/binary_image_{number_of_images}.png") # deleteing last image
-len(original_binary_str)
+# remove_img(f"images/binary_image_{number_of_images}.png") # deleteing last image
 
 
-with open('retrived-binary.txt', 'w') as f:
+with open('binary/retrived-binary.txt', 'w') as f:
     f.write(original_binary_str)
 #
-with open('retrived-binary.txt') as f:
+with open('binary/retrived-binary.txt') as f:
     retrived_string = f.read()
+
 binary_string_to_file(retrived_string, fileName[0]+'-copy.'+fileName[1])
