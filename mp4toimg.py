@@ -1,19 +1,18 @@
 from PIL import Image
 import cv2
 import os
-from datetime import timedelta
-import numpy as np
+
 def image_to_binary(image_path):
     img = Image.open(image_path)
     pixels = img.load()
     width, height = img.size
     binary_str = ""
-    for y in range(height):
+    for y in range(height-1):
         for x in range(width):
             r, g, b = pixels[x, y]
-            if r<48 and g<48 and b<48 :
+            if r<128 and g<128 and b<128 :
                 binary_str += "1"
-            elif r>207 and g>207 and b>207:
+            elif r>128 and g>128 and b>128:
                 binary_str += "0"
             else:
                 continue
@@ -25,38 +24,40 @@ def binary_string_to_file(binary_string, file_path):
         bytes_arr = bytearray(bytes_list)
         file.write(bytes_arr)
 
+def capture_frame(filePath):
+    cam = cv2.VideoCapture(filePath)
+
+    try:
+        if not os.path.exists('data'):
+            os.makedirs('data')
+    except OSError:
+        print('Error: Creating directory of data')
+    currentframe = 0
+    while (True):
+        ret, img = cam.read()
+        if ret:
+            name = './data/binary_image_' + str(currentframe) + '.png'
+            print('Creating...' + name)
+            cv2.imwrite(name, img)
+            currentframe += 1
+        # else:
+            break
+    cam.release()
+    cv2.destroyAllWindows()
 def remove_img(path):
     try:
         os.remove(path)
     except NameError:
         print("No image found")
 
-filePath = "test/word.docx.avi"
+
+
+filePath = "test/word.docx.mp4"
 fileName = filePath.split('.')
 
+capture_frame(filePath)
 
-
-cam = cv2.VideoCapture(filePath)
-
-
-try:
-    if not os.path.exists('data'):
-        os.makedirs('data')
-except OSError:
-    print('Error: Creating directory of data')
-currentframe = 0
-while (True):
-    ret, img = cam.read()
-    if ret:
-        name = './data/binary_image_' + str(currentframe) + '.png'
-        print('Creating...' + name)
-        cv2.imwrite(name, img)
-        currentframe += 1
-    else:
-        break
-cam.release()
-cv2.destroyAllWindows()
-
+#convert image to binary
 binary_strings = []
 #counting number of files in directory
 directory="data"

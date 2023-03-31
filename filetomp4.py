@@ -14,8 +14,6 @@ def binary_string_to_file(binary_string, file_path):
         bytes_arr = bytearray(bytes_list)
         file.write(bytes_arr)
 
-
-
 #binary_str = 1000 1010 1111 0000 1111
 def binary_to_image(binary_str):
     img_width = int(math.sqrt(len(binary_str)))+2
@@ -30,32 +28,12 @@ def binary_to_image(binary_str):
                 if index < len(binary_str):
                     if binary_str[index] == "1":
                         image.putpixel((x, y), (0, 0, 0))
-
                     else:
                         image.putpixel((x, y), (255, 255, 255))
                 else:
                     image.putpixel((x, y), (255, 0, 0))
                 index+=1
         image.save(f"images/binary_image_{i}.png")
-
-
-
-def image_to_binary(image_path):
-    img = Image.open(image_path)
-    pixels = img.load()
-    width, height = img.size
-    binary_str = ""
-
-    for y in range(height):
-        for x in range(width):
-            r, g, b = pixels[x, y]
-            if (r, g, b) == (0, 0, 0):
-                binary_str += "1"
-            elif (r, g, b) == (255, 255, 255):
-                binary_str += "0"
-            else:
-                continue
-    return binary_str
 
 def remove_img(path):
     try:
@@ -65,7 +43,7 @@ def remove_img(path):
 
 
 #taking the input
-file_path="test/word.docx"
+file_path="test/test_paper.pdf"
 
 
 #spliting thr name
@@ -73,11 +51,11 @@ fileName = file_path.split(".")
 binary_string = file_to_binary_string(file_path)
 
 print(len(binary_string))
-#saving original binary
+#logging original binary
 with open('binary/binary.txt', 'w') as f:
     f.write(binary_string)
 
-#reading form binary.text
+#reading form log
 with open('binary/binary.txt') as f:
     new_binary = f.read()
 
@@ -86,8 +64,9 @@ with open('binary/binary.txt') as f:
 binary_to_image(new_binary)
 
 #making video
+
 image_folder = 'images'
-video_name = fileName[0]+'.'+fileName[1]+'.avi'
+video_name = fileName[0]+'.'+fileName[1]+'.mp4'
 
 import glob
 
@@ -104,7 +83,6 @@ for filename in glob.glob('images/*.png'):
 
 out.release()
 
-
 #deleting images
 # binary_strings = []
 # directory="images"
@@ -113,28 +91,3 @@ out.release()
 # number_of_images = len(onlyfiles)
 # for i in range(len(onlyfiles)):
 #     remove_img(f"images/binary_image_{i}.png")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
-
-
-
-
-
-
