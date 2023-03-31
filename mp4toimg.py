@@ -7,15 +7,13 @@ def image_to_binary(image_path):
     img = Image.open(image_path)
     pixels = img.load()
     width, height = img.size
-    print(pixels)
     binary_str = ""
     for y in range(height):
         for x in range(width):
-            print(pixels[x,y])
             r, g, b = pixels[x, y]
-            if (r, g, b) == (0, 0, 0):
+            if r<48 and g<48 and b<48 :
                 binary_str += "1"
-            elif (r, g, b) == (255, 255, 255):
+            elif r>207 and g>207 and b>207:
                 binary_str += "0"
             else:
                 continue
@@ -33,7 +31,7 @@ def remove_img(path):
     except NameError:
         print("No image found")
 
-filePath = "test/pika.zip.avi"
+filePath = "test/word.docx.avi"
 fileName = filePath.split('.')
 
 

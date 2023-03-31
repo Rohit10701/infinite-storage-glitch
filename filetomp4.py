@@ -65,7 +65,7 @@ def remove_img(path):
 
 
 #taking the input
-file_path="test/ed3book.pdf"
+file_path="test/word.docx"
 
 
 #spliting thr name
