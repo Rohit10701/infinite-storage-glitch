@@ -7,10 +7,11 @@ def image_to_binary(image_path):
     img = Image.open(image_path)
     pixels = img.load()
     width, height = img.size
+    print(pixels)
     binary_str = ""
-    print(img.size)
     for y in range(height):
         for x in range(width):
+            print(pixels[x,y])
             r, g, b = pixels[x, y]
             if (r, g, b) == (0, 0, 0):
                 binary_str += "1"
@@ -32,7 +33,7 @@ def remove_img(path):
     except NameError:
         print("No image found")
 
-filePath = "test/pika.txt.avi"
+filePath = "test/pika.zip.avi"
 fileName = filePath.split('.')
 
 
@@ -47,9 +48,7 @@ except OSError:
     print('Error: Creating directory of data')
 currentframe = 0
 while (True):
-    cam.set(cv2.CAP_PROP_POS_MSEC, 40 * 1000)
     ret, img = cam.read()
-    print(ret)
     if ret:
         name = './data/binary_image_' + str(currentframe) + '.png'
         print('Creating...' + name)
@@ -57,7 +56,6 @@ while (True):
         currentframe += 1
     else:
         break
-print(currentframe)
 cam.release()
 cv2.destroyAllWindows()
 

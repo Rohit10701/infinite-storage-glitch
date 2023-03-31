@@ -1,6 +1,7 @@
 from PIL import Image
 import cv2
 import os
+import math
 def file_to_binary_string(file_path):
     with open(file_path, 'rb') as file:
         binary_code = file.read()
@@ -17,15 +18,15 @@ def binary_string_to_file(binary_string, file_path):
 
 #binary_str = 1000 1010 1111 0000 1111
 def binary_to_image(binary_str):
-    img_width = 5
-    img_height = 5
-    size = (img_width-1)* (img_height-1)
+    img_width = int(math.sqrt(len(binary_str)))+2
+    img_height= int(math.sqrt(len(binary_str)))+1
+    size = (img_width)* (img_height)
     index = 0
     num_images = (len(binary_str) // (size)) + 1
     for i in range(num_images):
         image = Image.new("RGB", (img_width, img_height), (255, 0, 0))
-        for y in range(img_height-1): #0
-            for x in range(img_width-1): #0
+        for y in range(img_height): #0
+            for x in range(img_width): #0
                 if index < len(binary_str):
                     if binary_str[index] == "1":
                         image.putpixel((x, y), (0, 0, 0))
@@ -64,14 +65,14 @@ def remove_img(path):
 
 
 #taking the input
-file_path="test/pika.txt"
+file_path="test/ed3book.pdf"
 
 
 #spliting thr name
 fileName = file_path.split(".")
 binary_string = file_to_binary_string(file_path)
 
-
+print(len(binary_string))
 #saving original binary
 with open('binary/binary.txt', 'w') as f:
     f.write(binary_string)
@@ -90,9 +91,12 @@ video_name = fileName[0]+'.'+fileName[1]+'.avi'
 
 import glob
 
-frameSize = (5,5)
+img_width = int(math.sqrt(len(binary_string)))+2
+img_height= int(math.sqrt(len(binary_string)))+1
+frameSize = (img_width,img_height)
 
-out = cv2.VideoWriter(video_name,cv2.VideoWriter_fourcc(*'DIVX'), 40, frameSize)
+
+out = cv2.VideoWriter(video_name,0, 1, frameSize)
 
 for filename in glob.glob('images/*.png'):
     img = cv2.imread(filename)
