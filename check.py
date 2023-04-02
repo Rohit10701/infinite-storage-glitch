@@ -5,8 +5,7 @@ with open('binary/binary.txt') as f:
 ls=[]
 for i,(s1,s2) in enumerate( zip(original_string,retrived_string)):
     if s1!=s2:
-        ls.append(i)
-
+        ls.append((s1,s2,i))
 print(ls)
 print(len(retrived_string)-len(original_string))
 
