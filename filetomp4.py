@@ -119,3 +119,4 @@ onlyfiles = next(os.walk(directory))[2]
 number_of_images = len(onlyfiles)
 for i in range(len(onlyfiles)):
     remove_img(f"images/binary_image_{i}.png")
+
