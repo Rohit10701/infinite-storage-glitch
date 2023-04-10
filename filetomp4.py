@@ -55,7 +55,7 @@ def binary_to_image(binary_str):
                             image.putpixel((x + j, y + i), 0)
                 index += 1
 
-        image.save(f"images/binary_image_{count}.png")
+        image.save(f"./images/binary_image_{count}.png")
         count += 1
 
 
@@ -68,55 +68,51 @@ def remove_img(path):
 
 def images_to_video(video_filename):
     # Set input and output file paths relative to script directory
-    input_path = "images/*.png"
+    input_path = "./images/*.png"
     output_path =video_filename
 
     # Get a list of image files
     image_files = glob.glob(input_path)
     print(image_files)
     # Set video parameters
-    fps = 30
+    fps = 1
     video_codec = "libx264"
     crf = 30
 
     # Run ffmpeg command to make video
 
-    cmd = ["ffmpeg", "-y", "-framerate", str(fps), "-i" ,"images/binary_image_%d.png", "-codec:v", video_codec, "-r", str(crf),output_path]
+    cmd = ["mp4_enc_dec/ffmpeg", "-y", "-framerate", str(fps), "-i" ,"./images/binary_image_%d.png", "-codec:v", video_codec, "-r", str(crf),output_path]
     subprocess.call(cmd)
 
+def makeVideo(file_path):
+    #spliting thr name
+    fileName = file_path.split(".")
+    binary_string = file_to_binary_string(file_path)
+
+    print(len(binary_string))
+    new_binary = binary_string
+
+
+    #converting binary to image
+
+    binary_to_image(new_binary)
+    print("converted to img and saved")
+    #making video
+
+    image_folder = './images'
+    video_name = fileName[0]+'.'+fileName[1]+'.'+str(len(new_binary))+'.mp4'
+    print("going to make video")
+    images_to_video(video_name)
+    print("video done")
+    #deleting images
+    directory="./images"
+    onlyfiles = next(os.walk(directory))[2]
+
+    number_of_images = len(onlyfiles)
+    for i in range(len(onlyfiles)):
+        remove_img(f"./images/binary_image_{i}.png")
+
 #taking the input
-file_path="test/test_pdf.zip"
-
-
-#spliting thr name
-fileName = file_path.split(".")
-binary_string = file_to_binary_string(file_path)
-
-print(len(binary_string))
-#logging original binary
-with open('binary/binary.txt', 'w') as f:
-    f.write(binary_string)
-
-#reading form log
-with open('binary/binary.txt') as f:
-    new_binary = f.read()
-
-
-#converting binary to image
-binary_to_image(new_binary)
-
-#making video
-
-image_folder = 'images'
-video_name = fileName[0]+'.'+fileName[1]+'.'+str(len(new_binary))+'.mp4'
-
-images_to_video(video_name)
-
-#deleting images
-directory="images"
-onlyfiles = next(os.walk(directory))[2]
-
-number_of_images = len(onlyfiles)
-for i in range(len(onlyfiles)):
-    remove_img(f"images/binary_image_{i}.png")
-
+file_path="test/pika.txt"
+#
+makeVideo(file_path)

@@ -57,7 +57,7 @@ def capture_frame(filePath):
     output_frames = "data/binary_image_%d.png"
 
     # Command to extract frames using ffmpeg
-    command = ["ffmpeg", "-i", filePath, "-vf", "fps=1", output_frames]
+    command = ["mp4_enc_dec/ffmpeg", "-i", filePath, "-vf", "fps=1", output_frames]
 
     # Execute the command using subprocess
     subprocess.call(command)
@@ -71,7 +71,7 @@ def remove_img(path):
 
 
 
-filePath = "test/test_pdf.zip.17249216.mp4"
+filePath = "test/pika.txt.216.mp4"
 fileName = filePath.split('.')
 
 capture_frame(filePath)
@@ -88,7 +88,7 @@ for i in range(len(onlyfiles)):
     binary_from_image=image_to_binary(image_path)
     if int(binary_from_image[:160],2) not in hm:
         hm[int(binary_from_image[:160],2)]=binary_from_image[160:]
-    remove_img(f"data/binary_image_{i}.png")
+    remove_img(f"data/binary_image_{i+1}.png")
 
 sorted_keys = sorted(hm.keys())
 sorted_dict = {key:hm[key] for key in sorted_keys}
@@ -98,10 +98,6 @@ for k,v in sorted_dict.items():
     print(k)
     original_binary_str+=v
 original_binary_str=original_binary_str[:int(fileName[2])]
-with open('binary/retrived-binary.txt', 'w') as f:
-    f.write(original_binary_str)
-#
-with open('binary/retrived-binary.txt') as f:
-    retrived_string = f.read()
+retrived_string =original_binary_str
 
 binary_string_to_file(retrived_string, fileName[0]+'-copy.'+fileName[1])
