@@ -47,6 +47,7 @@ def binary_string_to_file(binary_string, file_path):
 
 def capture_frame(filePath):
 #whatever
+    # rohit's comment
     try:
         if not os.path.exists('data'):
             os.makedirs('data')
